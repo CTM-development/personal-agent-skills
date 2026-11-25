@@ -3,7 +3,7 @@ name: evidence-based-learning
 description: Help motivated learners master a lecture, chapter, paper or problem type through interactive visual exploration, adaptive tutoring, independent practice and spaced review.
 compatibility: Uses an interactive visual surface in chat or a runnable study artefact. File writing and code execution help build and validate artefacts. Claude-specific delivery features have general fallbacks.
 metadata:
-  version: "1.2"
+  version: "1.3"
   author: chris
   portability: "general core; [claude] marks Anthropic-specific features"
 ---
@@ -89,10 +89,11 @@ Moves, chosen by what the learner lacks:
   - [claude] Offer to schedule the review session as a scheduled task, only with consent.
   - [general] Otherwise give the dates as a list, or write a small `.ics` calendar file the learner can import.
 - Turn the next study action into an if-then plan.
+- Offer a short, copyable progress record with the topic, what the learner did independently, where they needed help, and the next unaided task with its due date if known. Use the artefact’s record when available and add observations from the tutoring conversation.
 
 ### 6. Return sessions
 
-Start with unaided retrieval of what is due. Use short corrective feedback and repeat retrieval until the learner meets the criterion, then revisit across spaced sessions. Where the goal involves application, use a fresh problem or visual state. Revise the study experience by adding sections, moving missed objectives into the review queue and fading scaffolds the learner no longer needs.
+When the learner pastes a progress record, use it to resume the session. Start with the recorded task if it is due, or choose the next due unaided retrieval. Use short corrective feedback and repeat retrieval until the learner meets the criterion, then revisit across spaced sessions. Where the goal involves application, use a fresh problem or visual state. Revise the study experience by adding sections, moving missed objectives into the review queue and fading scaffolds the learner no longer needs.
 
 ## Academic integrity
 
