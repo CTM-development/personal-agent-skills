@@ -39,6 +39,7 @@ def plugin_manifest(directory):
         "interface": {
             "displayName": display_name,
             "shortDescription": f"Use the {display_name} skill.",
+            "longDescription": description.strip(),
         },
     }
 
