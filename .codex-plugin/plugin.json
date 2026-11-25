@@ -1,0 +1,17 @@
+{
+  "name": "personal",
+  "version": "1.0.0",
+  "description": "Personal Agent Skills for learning and repeatable workflows.",
+  "author": {
+    "name": "Chris"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Personal Skills",
+    "shortDescription": "Use personal agent skills",
+    "longDescription": "Use the skills in this collection for interactive study and other repeatable workflows.",
+    "developerName": "Chris",
+    "category": "Other",
+    "capabilities": []
+  }
+}

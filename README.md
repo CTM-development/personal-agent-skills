@@ -57,7 +57,7 @@ python3 tools/api_push.py --dry-run      # preview Claude API uploads
 | Claude Code, any machine | Automatic one-way sync from your claude.ai account (Claude Code v2.1.273+, same account, not with an API key or Bedrock) | [claude] |
 | Claude Code, alternative | `claude plugin marketplace add <you>/agent-skills-repo`, then `claude plugin install personal@personal-skills`. Skills appear as `personal:<name>`. Use this **or** the account sync on a machine, not both. | [claude] |
 | Codex | Run `bash tools/link.sh` to install a user-scoped symlink, or link the skill into a specific project’s `.agents/skills/`. | [OpenAI documentation](https://learn.chatgpt.com/docs/build-skills) |
-| ChatGPT | Upload `dist/<name>-chatgpt-plugin.zip` through the plugin uploader. Standalone Skills and ChatGPT Projects are also available on supported surfaces. See below. | [OpenAI] |
+| ChatGPT | Import the GitHub marketplace in an eligible workspace, or upload a plugin ZIP. See below. | [OpenAI] |
 | Copilot, Cursor, Gemini CLI, … | `git pull && bash tools/link.sh` on each machine | [general] mechanism, [third-party] paths |
 | Claude API agents | `python3 tools/api_push.py` once per new skill; CI pushes new versions afterwards (needs repo secret `ANTHROPIC_API_KEY`) | [anthropic-api] |
 | Your own agent harness | Read each `SKILL.md` frontmatter at startup, load the body when a skill is chosen, read `references/` on demand | [general] |
@@ -65,6 +65,8 @@ python3 tools/api_push.py --dry-run      # preview Claude API uploads
 One-way flows to remember: the claude.ai → Claude Code sync never writes back, and skills edited through a Claude chat ("save as skill") change only claude.ai. Copy such edits back into this repo.
 
 ## Codex and ChatGPT setup
+
+**GitHub marketplace.** In ChatGPT, open **Admin → Plugins → Add → Import marketplace**. Enter the repository URL, leave **Path** empty, and select `main` as the branch. Install **Personal Skills** after the import. The same repo exposes `personal@personal-skills` in Codex and Claude Code. Both plugin manifests use the existing `skills/` directory. Bump the version in `.codex-plugin/plugin.json` and `.claude-plugin/plugin.json` together when releasing skill changes, including reference files. After pushing to `main`, ChatGPT checks for updates daily. Use **Sync now** to check a release immediately. [ChatGPT marketplace sync](https://learn.chatgpt.com/docs/enterprise/plugin-management)
 
 **Codex.** Preview the linker with `bash tools/link.sh --dry-run`. The supported user location is `~/.agents/skills/`. For project scope, place the full skill folder or a symlink under the target project’s `.agents/skills/`. Invoke `$evidence-based-learning` in the CLI. If upgrading from this repo’s former `~/.codex/skills/` links, remove only the old links that point to this checkout, or keep using one location to avoid duplicate entries. [Codex skill discovery](https://learn.chatgpt.com/docs/build-skills)
 

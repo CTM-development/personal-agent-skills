@@ -1,5 +1,5 @@
 ---
-name: evidence-based-learning
+name: interaction-based-learning
 description: Help motivated learners master a lecture, chapter, paper or problem type through interactive visual exploration, adaptive tutoring, independent practice and spaced review.
 compatibility: Uses an interactive visual surface in chat or a runnable study artefact. File writing and code execution help build and validate artefacts. Claude-specific delivery features have general fallbacks.
 metadata:
