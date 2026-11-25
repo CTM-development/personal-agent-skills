@@ -1,0 +1,59 @@
+# [github] CI for the skills repo. The checks themselves are [general]; the API push is [anthropic-api].
+name: skills
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # [general] Official Agent Skills validator. Install path taken from agentskills.io;
+      # not verified when scaffolded. If this step fails to install, fix the path or remove it.
+      - name: Install skills-ref
+        continue-on-error: true
+        run: pip install "git+https://github.com/agentskills/agentskills#subdirectory=skills-ref"
+
+      # [general] spec checks + [claude] 200-char description limit. Runs skills-ref too if installed.
+      - name: Check skills
+        run: python3 tools/check_skills.py
+
+      # [claude] Claude Code's own validator for .claude-plugin/marketplace.json.
+      # Not run when scaffolded. Remove this step if you don't use the plugin route.
+      - name: Validate Claude Code marketplace
+        continue-on-error: true
+        run: npx -y @anthropic-ai/claude-code plugin validate .
+
+      # [claude] ZIPs in the claude.ai upload format, downloadable from the workflow run.
+      - name: Package
+        run: python3 tools/package.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: skill-zips
+          path: dist/*.zip
+
+  api-push:
+    # [anthropic-api] Pushes new versions of changed skills that already have an id in
+    # api-skill-ids.json. Add the repo secret ANTHROPIC_API_KEY to enable; without it this skips.
+    needs: check-and-package
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Push changed skills
+        if: env.ANTHROPIC_API_KEY != ''
+        run: python3 tools/api_push.py --no-create --changed-since "${{ github.event.before }}"

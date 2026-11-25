@@ -1,0 +1,14 @@
+{
+  "name": "personal-skills",
+  "description": "Chris's personal Agent Skills, packaged for Claude Code. The skills themselves live in skills/ and are harness-neutral.",
+  "owner": {
+    "name": "Chris"
+  },
+  "plugins": [
+    {
+      "name": "personal",
+      "source": "./",
+      "description": "All skills in this repo's skills/ folder (invoked as personal:<skill-name>)."
+    }
+  ]
+}
