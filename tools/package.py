@@ -2,7 +2,7 @@
 """Build dist/<skill>.zip for every skill, with the skill folder as the ZIP's top level.
 
 [claude]  This is the format claude.ai expects for Customize > Skills > Upload a skill.
-[general] The same ZIP works for sharing a skill by hand with any Agent Skills harness.
+[general] The ZIP contains the standalone Agent Skill. Use package_plugin.py for the ChatGPT plugin uploader.
 
 Usage: python3 tools/package.py [skill-name ...]
 """
@@ -15,13 +15,18 @@ SKILLS, DIST = ROOT / "skills", ROOT / "dist"
 SKIP = {".DS_Store", "__pycache__", ".pytest_cache"}
 
 
+def write_skill(archive, directory, archive_root):
+    for file in sorted(directory.rglob("*")):
+        relative = file.relative_to(directory)
+        if file.is_file() and not SKIP.intersection(relative.parts):
+            archive.write(file, archive_root / relative)
+
+
 def package(d):
     DIST.mkdir(exist_ok=True)
     out = DIST / f"{d.name}.zip"
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
-        for f in sorted(d.rglob("*")):
-            if f.is_file() and not SKIP.intersection(f.relative_to(d).parts):
-                z.write(f, Path(d.name) / f.relative_to(d))
+        write_skill(z, d, Path(d.name))
     return out
 
 

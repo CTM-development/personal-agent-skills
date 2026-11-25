@@ -20,6 +20,7 @@ skills/<name>/references/         [general]  detail loaded on demand
 templates/skill-template/         [general]  starting point for new skills
 tools/check_skills.py             [general] spec checks + [claude] 200-char description limit
 tools/package.py                  [claude]   dist/<name>.zip in the claude.ai upload format
+tools/package_plugin.py           [OpenAI]   dist/<name>-chatgpt-plugin.zip for the plugin uploader
 tools/link.sh + targets.conf      [general] symlinks; [third-party] per-agent folder paths
 tools/new_skill.py                [general]  scaffold a skill from the template
 tools/api_push.py                 [anthropic-api] create / version skills via /v1/skills
@@ -42,7 +43,8 @@ gh repo create agent-skills-repo --private --source . --push
 ```bash
 python3 tools/new_skill.py my-skill      # new skill from the template
 python3 tools/check_skills.py            # all checks (--profile spec: open standard only)
-python3 tools/package.py                 # build dist/*.zip
+python3 tools/package.py                 # build standalone skill ZIPs
+python3 tools/package_plugin.py          # build ChatGPT plugin ZIPs
 bash tools/link.sh --dry-run             # preview symlinks into other agents, then run without --dry-run
 python3 tools/api_push.py --dry-run      # preview Claude API uploads
 ```
@@ -55,7 +57,7 @@ python3 tools/api_push.py --dry-run      # preview Claude API uploads
 | Claude Code, any machine | Automatic one-way sync from your claude.ai account (Claude Code v2.1.273+, same account, not with an API key or Bedrock) | [claude] |
 | Claude Code, alternative | `claude plugin marketplace add <you>/agent-skills-repo`, then `claude plugin install personal@personal-skills`. Skills appear as `personal:<name>`. Use this **or** the account sync on a machine, not both. | [claude] |
 | Codex | Run `bash tools/link.sh` to install a user-scoped symlink, or link the skill into a specific project’s `.agents/skills/`. | [OpenAI documentation](https://learn.chatgpt.com/docs/build-skills) |
-| ChatGPT | Use the Skills uploader in an eligible workspace, or set up a dedicated ChatGPT Project with instructions and reference files. See below. | [OpenAI] |
+| ChatGPT | Upload `dist/<name>-chatgpt-plugin.zip` through the plugin uploader. Standalone Skills and ChatGPT Projects are also available on supported surfaces. See below. | [OpenAI] |
 | Copilot, Cursor, Gemini CLI, … | `git pull && bash tools/link.sh` on each machine | [general] mechanism, [third-party] paths |
 | Claude API agents | `python3 tools/api_push.py` once per new skill; CI pushes new versions afterwards (needs repo secret `ANTHROPIC_API_KEY`) | [anthropic-api] |
 | Your own agent harness | Read each `SKILL.md` frontmatter at startup, load the body when a skill is chosen, read `references/` on demand | [general] |
@@ -65,6 +67,8 @@ One-way flows to remember: the claude.ai → Claude Code sync never writes back,
 ## Codex and ChatGPT setup
 
 **Codex.** Preview the linker with `bash tools/link.sh --dry-run`. The supported user location is `~/.agents/skills/`. For project scope, place the full skill folder or a symlink under the target project’s `.agents/skills/`. Invoke `$evidence-based-learning` in the CLI. If upgrading from this repo’s former `~/.codex/skills/` links, remove only the old links that point to this checkout, or keep using one location to avoid duplicate entries. [Codex skill discovery](https://learn.chatgpt.com/docs/build-skills)
+
+**ChatGPT plugin uploader.** Run `python3 tools/package_plugin.py evidence-based-learning` from the repo. Upload `dist/evidence-based-learning-chatgpt-plugin.zip` in the plugin uploader. With no skill names, the script builds one ZIP per skill. Each archive puts a Codex manifest and the bundled skill at the plugin root. The plugin version comes from the skill’s `metadata.version`. Update that value for a new release. [OpenAI plugin packaging](https://developers.openai.com/plugins/deploy/submission)
 
 **ChatGPT with native Skills.** In an eligible workspace, open **Plugins → Skills → Create → Upload from your computer**. Run `python3 tools/package.py evidence-based-learning` to build a bundle containing the skill and its references. Try the resulting ZIP in the uploader. If the uploader requires a different format, use the Skills editor and include the referenced files. Check that the skill appears, can be selected with `@` and can open its references after installation. This repo’s ZIP layout was verified locally and needs a live ChatGPT upload check. [Skills in ChatGPT](https://help.openai.com/en/articles/20001066-skills-in-chatgpt)
 
