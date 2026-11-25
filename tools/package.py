@@ -15,11 +15,17 @@ SKILLS, DIST = ROOT / "skills", ROOT / "dist"
 SKIP = {".DS_Store", "__pycache__", ".pytest_cache"}
 
 
+def skill_paths(directory):
+    for path in sorted(directory.rglob("*")):
+        relative = path.relative_to(directory)
+        if not SKIP.intersection(relative.parts):
+            yield path, relative
+
+
 def write_skill(archive, directory, archive_root):
-    for file in sorted(directory.rglob("*")):
-        relative = file.relative_to(directory)
-        if file.is_file() and not SKIP.intersection(relative.parts):
-            archive.write(file, archive_root / relative)
+    for path, relative in skill_paths(directory):
+        if path.is_file():
+            archive.write(path, archive_root / relative)
 
 
 def package(d):
