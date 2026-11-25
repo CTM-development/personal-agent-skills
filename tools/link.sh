@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Symlink every skill in skills/ into each agent's skills folder listed in tools/targets.conf.
-# [general] mechanism; target paths are per-tool conventions (see targets.conf).
+# [general] mechanism; see targets.conf for supported locations.
 #
 # Usage: bash tools/link.sh [--dry-run] [--unlink]
 #   --dry-run  show what would change
@@ -26,7 +26,7 @@ while IFS= read -r line; do
   [ -z "$line" ] && continue
   target="${line/#\~/$HOME}"
   parent="$(dirname "$target")"
-  if [ ! -d "$parent" ]; then
+  if [ ! -d "$parent" ] && [ "$target" != "$HOME/.agents/skills" ]; then
     echo "skip   $target (agent folder $parent not found)"
     continue
   fi

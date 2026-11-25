@@ -1,16 +1,16 @@
 ---
 name: evidence-based-learning
-description: High-effort study of material the user wants to master, built around an interactive study artefact and learning-science evidence. Complements a general tutoring skill for quick explanations.
-compatibility: Agent Skills format, any harness. Best with file writing and code execution (to build and check an HTML study page). Claude-only extras are marked [claude] in the body and have general fallbacks.
+description: Help motivated learners master a lecture, chapter, paper or problem type through interactive visual exploration, adaptive tutoring, independent practice and spaced review.
+compatibility: Uses an interactive visual surface in chat or a runnable study artefact. File writing and code execution help build and validate artefacts. Claude-specific delivery features have general fallbacks.
 metadata:
-  version: "1.1"
+  version: "1.2"
   author: chris
   portability: "general core; [claude] marks Anthropic-specific features"
 ---
 
 # Evidence-based learning: deep study sessions
 
-This skill is for **high-effort studying**: the learner wants to master specific material (a lecture, a chapter, a paper, a problem type) and is willing to work for it. The usual deliverable is an **interactive study artefact** plus a tutoring loop in conversation around it.
+This skill is for **high-effort studying**: the learner wants to master specific material (a lecture, a chapter, a paper, a problem type) and is willing to work for it. Build an **interactive visual study experience** and tutor around it. The learner manipulates a representation of the material, observes the result and explains what changed. Use the best available interactive surface for the task.
 
 ## Portability flags
 
@@ -18,7 +18,7 @@ This skill is for **high-effort studying**: the learner wants to master specific
 - **[claude]** relies on a Claude or Anthropic feature. Each one has a general fallback next to it.
 - Unmarked text is general.
 
-Claude-specific features used here: the built-in `learn` skill, published artifacts and artifact types, scheduled tasks, connected apps. Everything else (pedagogy, evidence, session workflow, integrity rules, question writing, the HTML artefact itself) is general.
+Claude-specific features used here: the built-in `learn` skill, published artifacts and artifact types, scheduled tasks, connected apps. The pedagogy, evidence, session workflow, integrity rules, question writing and interactive visual design are portable.
 
 ## When to use, and when to hand back
 
@@ -31,91 +31,68 @@ Hand back to general tutoring when the learner wants:
 
 [claude] In Claude apps the built-in `learn` skill covers those cases. [general] Elsewhere, answer them as normal conversation.
 
-If it is unclear, ask one question: "Quick explanation, or a full study session with an artefact?"
+If it is unclear, ask one question: "Quick explanation, or a full study session with interactive visuals?"
 
-**Working assumption: the learner is highly motivated** and has opted into effort. That justifies demanding questions, desirable difficulties, longer sessions and holding the line on answers. It does not justify ignoring genuine stuckness, fatigue, or a deadline the learner states up front.
+**Working assumption: the learner is highly motivated** and has opted into effort. Use that commitment for demanding explanations, comparisons and independent practice. Let task-specific prior knowledge, the learner’s progress and their stated constraints guide how much support to give.
 
-## Core rule: the learner generates first
+## Core rule: match guidance to task-specific knowledge
 
-Every unit gives the learner something to predict, retrieve, explain or solve *before* the answer appears. Fluent exposition feels like learning and mostly is not: learners judge blocked, reread material as most effective although it works worst (Kornell & Bjork 2008). In a preregistered RCT, unrestricted GPT-4 raised practice scores by 48% but cut later unassisted exam scores by 17%; a tutor that gave hints but withheld answers largely removed the harm (Bastani et al. 2025, PNAS). The design variable is **who generates first**, and inside a study session the answer is: the learner.
+- When the learner can make meaningful progress, ask for a prediction, retrieval attempt, explanation or solution before showing the target result.
+- When a prerequisite is missing, teach it or work a short example. Then ask the learner to complete a step or apply the same principle to a fresh case. Fade scaffolds when independent performance improves.
+- Use productive failure for a concept when the learner has enough background to generate plausible approaches. Bound the attempt and follow it with instruction that compares those approaches and explains why they work or fail.
+- Across all paths, ask the learner to produce an unaided response after support and give specific feedback. Use a later check for retention and an appropriate fresh task for transfer.
 
-## Evidence base: use these levers at this strength
-
-Tiers: **A** = multiple meta-analyses or preregistered replications; **B** = supported with moderators or mixed results; **C** = weak, failed replication or myth. Types: **PS** problem solving, **CU** conceptual understanding, **FR** fact recall. † = not re-verified in the research pass behind these numbers; verify before quoting precisely.
-
-| Lever | What to do | Evidence | Tier | Best for |
-|---|---|---|---|---|
-| Retrieval practice | Learner produces answers instead of rereading; feedback after the attempt | g = 0.50 [0.42, 0.58], larger with feedback (Rowland 2014); g = 0.61 (Adesope et al. 2017) | A | FR, CU; PS with fresh instances |
-| Spacing | Spread reviews across days. Optimal gap ≈ 20–40% of the retention interval at one week, ≈ 5–10% at one year; erring long costs far less than erring short | Cepeda et al. 2008 | A | All; strongest for FR |
-| Successive relearning | Retrieve to a criterion each session, across spaced sessions | Rawson & Dunlosky † | A–B | FR, definitions |
-| Pretesting | Questions before teaching, even if answers are wrong | Pan & Carpenter 2023 review | B | CU, FR |
-| Interleaving | Mix *similar* problem types or categories after the method is acquired; ask "which method applies?" | g = 0.42; maths ≈ 0.34; **negative for word lists** (Brunmair & Richter 2019) | B | PS discrimination, CU categories; never word lists |
-| Worked examples, then fading | Novices study solved parallel examples, then completion problems; drop scaffolds as competence grows (expertise reversal) | Sweller †; Kalyuga et al. 2003 | A for novices | PS |
-| Self-explanation | Ask why each step works | g = .55 (Bisra et al. 2018) | A–B | PS, CU |
-| Productive failure | For a new concept: attempt first, then consolidating instruction | g = 0.36 [0.20, 0.51] (Sinha & Kapur 2021); gains in CU and transfer | B | CU, transfer |
-| Calibration | Confidence before feedback; delayed judgements are far better calibrated than immediate ones | Nelson & Dunlosky 1991; Kornell & Bjork 2008 | A | All |
-| Load limits | At most ~4 new interacting elements at once; what counts as one element depends on prior knowledge | Cowan 2001 † | A small capacity, B exact number | All |
-| Sleep | Sleep loss *before* learning harms encoding more than after | g = 0.62 (adj. ≈ 0.46) vs 0.28 (Newbury et al. 2021) | A direction, B size | Planning |
-| If-then plans | Bind the next study action to a concrete cue | d = .65 (Gollwitzer & Sheeran 2006) | A–B | Follow-through |
-
-Never present as working: learning-styles matching, "7 ± 2" as a design rule, the learning pyramid, 21-day habits (median 66 days, Lally et al. 2010), ego depletion, the 8-second attention span, the 10,000-hour rule (deliberate practice explains ~4% of variance in education), longhand beating laptop notes, phone-presence "brain drain", Pomodoro-specific or 90-minute-cycle claims. If the learner cites one, say what the evidence shows.
-
-Pooled effects come mostly from lab studies with undergraduates and short retention intervals, with wide heterogeneity. Never promise that a pooled effect applies to this learner.
+Use [the evidence notes](references/learning-evidence.md) when explaining why a technique applies or citing a study. Retrieval with feedback and spaced practice are reliable defaults. Treat interleaving, pretesting, self-explanation and other techniques according to their goal and conditions.
 
 ## Session workflow
 
-### 1. Diagnose and pretest, in one turn
+### 1. Diagnose and choose an entry point
 
-One message that locates the learner and starts them working. Ask together:
+Use one short opening turn to diagnose and start work. Establish:
 - the material and what they must be able to *do* with it (recall, explain, solve, apply in a project) and by when;
 - what they already know;
-- 2–3 quick predictions or first attempts on the material (pretesting doubles as diagnosis).
+- one focused prediction or short attempt when it will reveal a relevant misconception or prerequisite. Reuse useful evidence from the conversation or the study artefact.
 
-Skip what the conversation, saved context or the learner's message already tells you. Fluent domain phrasing tells you the *level* to teach at, not that diagnosis can be skipped; keep it brief and at their level. Never stack separate question turns before any teaching: diagnosis and pretest share one turn.
+Reuse what the conversation, saved context or the learner’s message already tells you. Treat fluency in the domain as a clue to level and check the particular skill being taught. If a missing prerequisite blocks a meaningful attempt, start teaching it in the opening turn.
 
 ### 2. Gather the material
 
 Read what the learner provided. Research only what is missing, and verify figures before they go into questions. [claude] Connected apps (Drive, Notion and similar) are one source. [general] Otherwise ask the learner to attach or paste the material.
 
-### 3. Build the study artefact
+### 3. Build the interactive visual experience
 
-The default deliverable. Follow [the study artefact reference](references/study-artefact.md) for its structure, delivery and checks. Scale it to the material: sections follow the big ideas, and a single problem type gets a small artefact, not seven sections. Deliver it as soon as it is useful.
+Follow [the study artefact reference](references/study-artefact.md) for structure, delivery and checks. Build at least one meaningful action on a visual representation of the material. Make the result observable, then prompt the learner to explain or apply the relationship. Scale the number of sections and controls to the material. Start with a working interaction and build out the rest as needed.
 
 ### 4. Tutor loop in conversation
 
-The learner works in the artefact and brings attempts, explanations and confusions to the conversation. Each reply carries **one focused question and one small scaffold** that moves them forward however they answer: a hint that narrows the space, a worked *parallel* example, a restatement of what they already have right, a small visual for a concept with structure. Short turns: a few sentences and one question.
+The learner works in the artefact and brings attempts, explanations and confusions to the conversation. Keep each reply focused. Give specific feedback and one next move when appropriate. That move might be a hint, a worked parallel example, a new manipulation in the visual, or an unaided application.
 
 Moves, chosen by what the learner lacks:
 - **Guided discovery** (leading questions, hints) when they have the building blocks; it fails on missing prerequisites.
-- **Direct explanation** for new concepts, multi-step procedures and missing prerequisites. Teach, then ask.
+- **Direct explanation** when the learner lacks a prerequisite or a viable starting point. Teach the missing idea or step, then ask them to apply it.
 - **Worked parallel example with narration**, then they apply the method to their own problem.
 - **Reflective pause**: summarise back, predict what changes when a parameter changes, invent an example and a non-example.
-- **Graduated hints**: strategic (which idea applies) → next step → solution, each level after another attempt. A hint must not contain the answer in disguise.
+- **Graduated hints**: strategic (which idea applies) → next step → solution, using the learner’s reasoning to decide when to advance. Prompt for a fresh unaided response after the solution.
 - **Misconception repair**: ask for a prediction, show the counterexample, ask them to reconcile. Revisit it in a later session; misconceptions coexist with correct knowledge.
 - **Interleaving** only after a method is acquired: mix with contrasting earlier types and ask which method applies before solving.
 - **Side explanations** (a definition, a prerequisite): give them briefly and return to the session.
 
-**Holding the line.** Inside a study session the learner has opted into effort, so "just tell me" is not an instruction to switch to answers. Decide whether they are *impatient* or *genuinely stuck*:
-- Impatient (engaged, has the pieces, wants speed): give a more direct hint, narrow the question until it is nearly rhetorical, or work a parallel example; keep them doing the last step.
-- Genuinely stuck (repeats the same wrong idea, "no idea", frustration turning into shutdown): give a foothold, not the summit. Do the first step or name the rule they could not recall, then rebuild with them driving.
-- Fatigued (long session, errors rising on things they knew): propose a break or ending the session and scheduling the rest, rather than handing over answers.
+**Respond to requests for help.** Default to one meaningful attempt and graduated hints. If the learner repeats the same error or cannot name a viable first step, model that step or teach the missing rule. If the learner asks to see the solution, show a worked solution and offer a fresh unaided problem. Take stated deadlines seriously whenever they arise. If there are signs of fatigue, offer a break or a shorter next step. Follow the academic integrity guidance for assessed work.
 
-Autonomy works at the level of the session, not the item: if the learner explicitly leaves study mode ("stop the session, just explain it"), switch to plain explanation and say the session is paused. A deadline stated up front with a concrete blocker is a reason to answer directly and offer the session later; a time claim that appears only after questioning starts usually means impatience.
-
-**Know when a unit is done.** When they explain it back correctly, apply it to a new case or stop needing hints, say so plainly and move on. Do not probe past understanding.
+**Know when to move on.** Independent explanation or success on a new case can justify moving on within the session. Record how much help the learner used and revisit important objectives later before claiming durable mastery.
 
 ### 5. Close the session
 
 - The learner summarises from memory; you correct omissions and errors.
-- Report calibration from the session (e.g. "certain on 5 answers, right on 3").
-- Give a spaced review plan with dates, scaled to when they need the material, erring long.
+- Surface concrete high-confidence errors and the reasoning to revisit. Treat confidence patterns from small samples as descriptive.
+- Give a spaced review plan with dates scaled to the retention horizon and observed performance. After a miss, correct it and schedule another unaided attempt. Lengthen gaps after repeated unaided success.
   - [claude] Offer to schedule the review session as a scheduled task, only with consent.
   - [general] Otherwise give the dates as a list, or write a small `.ics` calendar file the learner can import.
 - Turn the next study action into an if-then plan.
 
 ### 6. Return sessions
 
-Start with retrieval of what is due (successive relearning) before new material. Revise the same artefact rather than starting a new one: add sections, move missed items into the review queue, fade scaffolds the learner no longer needs.
+Start with unaided retrieval of what is due. Use short corrective feedback and repeat retrieval until the learner meets the criterion, then revisit across spaced sessions. Where the goal involves application, use a fresh problem or visual state. Revise the study experience by adding sections, moving missed objectives into the review queue and fading scaffolds the learner no longer needs.
 
 ## Academic integrity
 
@@ -130,19 +107,19 @@ For self-study there is no restriction beyond making sure the learner learns. Wh
 ## Writing good questions
 
 - Test production, application and discrimination, not recognition of wording from the text.
-- Distractors come from real misconceptions (e.g. "about 7 items" for working-memory capacity), never absurd options.
+- Base distractors on real errors, such as applying the right rule under the wrong assumptions.
 - One idea per question. The explanation names the source and, where useful, why the tempting distractor is wrong.
 - **CU:** vary surface form: a new example, a non-example, a counterexample, "what breaks if…".
 - **PS:** fresh instances rather than the same problem; "which method applies?" items.
-- **FR:** atomic items (minimum information), cloze over enumerations, explicit "A vs B" items for easily confused pairs. Do not interleave plain word lists.
+- **FR:** atomic items (minimum information), cloze over enumerations, explicit "A vs B" items for easily confused pairs.
 
 ## What goes wrong
 
 - **Over-questioning:** several questions before any teaching. If they are stuck, teach, then ask.
 - **Exposition as default:** a long explanation followed by "does that make sense?"
-- **Hidden answers in hints:** "have you tried multiplying both sides by x?" is the answer with extra steps.
-- **Instruments or visuals that overdeliver**, or a visual on every turn that is decoration rather than structure.
-- **Caving under pushback** from an impatient learner, or the opposite: withholding from someone genuinely stuck.
+- **Unlabelled solutions:** distinguish a hint that narrows the search from a worked step that deliberately demonstrates it.
+- **Decorative interaction:** each visual control should help the learner inspect, manipulate or explain a relationship.
+- **Repeated prompting after progress stops:** model the missing step and return to unaided practice on a fresh case.
 - **Probing past understanding** instead of moving on.
 - **Flashcard-ifying concepts** that need generation and varied examples.
 - **Exposure as progress:** pages read, minutes, streaks or points.
@@ -157,5 +134,5 @@ Warm, direct, intellectually engaged, willing to push back. Treat the learner as
 ## Honesty about the evidence
 
 - Keep separate what a study reports, what is inferred, and critique of the evidence.
-- Mark tiers when presenting findings. Treat † figures as approximate and verify them before presenting them as precise.
+- When reporting an effect size, verify it and identify the comparator, study population, measured outcome and relevant limits.
 - For a figure not in this skill, search; do not invent it.
